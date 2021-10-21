@@ -2,9 +2,15 @@ import wikipedia
 import speech_recognition as sr 
 import pyttsx3
 import datetime
+import webbrowser 
+import os
+import random 
 
 
 
+
+
+chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 
@@ -36,6 +42,7 @@ def takeCommand():
     with sr.Microphone() as source:
         print("Listening....")
         r.pause_threshold = 1  #non speaking time
+        r.energy_threshold = 250 #pitch of the speaker
         audio = r.listen(source)
 
 
@@ -53,9 +60,10 @@ def takeCommand():
     return query
 
 
+
 if __name__ == "__main__":
     wishMe()
-    while True:
+    if 1:
         query = takeCommand().lower()
 
         #logic for executing tasks based on query
@@ -66,3 +74,36 @@ if __name__ == "__main__":
             speak("According to wikipedia")
             print(results)
             speak(results)
+
+        elif 'open youtube' in query:
+            webbrowser.get(chrome_path).open("youtube.com")
+
+        elif 'open google' in query:
+            webbrowser.get(chrome_path).open("google.com")
+
+        elif 'open googlemap' in query:
+            webbrowser.get(chrome_path).open("www.google.co.in//maps")
+
+        elif 'the time' in query:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")
+            print(strTime)
+            speak(f"The time is {strTime}")
+
+        elif 'open mail' in query:
+            webbrowser.get(chrome_path).open("gmail.com")
+
+        elif 'play music' in query:
+            music_dir = "E:\\Anu\\MUSIC"
+            songs = os.listdir(music_dir)
+            music = random.choice(songs)
+            #print(songs)
+            os.startfile(os.path.join(music_dir,music))
+            os.system("pause")
+
+        elif 'search' in query:
+            try:
+                url ="https://www.google.co.in/search?q="
+                search_url = url + query
+                webbrowser.get(chrome_path).open(search_url)
+            except:
+                print("Sorry. Please say it again!")
